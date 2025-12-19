@@ -1,8 +1,10 @@
 let isDraggingStart = false;
 let isDraggingFinish = false;
 let isDraggingWall = false;
+let isDraggingWeight = false;
 
 let currentTool = 'wall'
+let currentWeightValue = 5;
 
 class Node {
     constructor(row, col, isWall, isStart, isFinish, isVisited) {
@@ -79,12 +81,16 @@ function handleMouseEnter(row,col,grid){
         toggleWall(row,col,grid);
     }
     
+    if (isDraggingWeight) {
+        toggleWeight(row, col, grid);
+    }
 }
 
 function handleMouseUp() {
     isDraggingStart = false;
     isDraggingFinish = false;
     isDraggingWall = false;
+    isDraggingWeight = false;
 }
 
 function resetGridData(grid){
@@ -104,9 +110,25 @@ function toggleWeight(row, col, grid) {
     const node = grid[row][col];
     if (node.isStart || node.isFinish || node.isWall) return;
 
-    node.weight = node.weight === 1 ? 5 : 1;
+    node.weight = currentWeightValue;
+    
     const element = document.getElementById(`node-${row}-${col}`);
-    element.classList.toggle("node-weight");
+    
+    if (node.weight === 1) {
+        element.classList.remove("node-weight");
+        element.style.opacity = "1"; // Reset opacity
+    } else {
+        element.classList.add("node-weight");
+        
+        
+        const intensity = Math.min(0.3 + (node.weight / 50), 1); 
+        element.style.opacity = intensity;
+    }
+}
+
+function updateWeightValue(val) {
+    currentWeightValue = parseInt(val);
+    document.getElementById('weightDisplay').innerText = val; // Update the text label
 }
 
 function renderGrid(grid){
