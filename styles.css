@@ -1,8 +1,7 @@
-/* Replace your styles.css with this */
 :root {
     --bg-color: #0f0f0f;
     --surface-color: #1a1a1a;
-    --accent-color: #8fa18d; /* Sage green from inspiration */
+    --accent-color: #8fa18d; 
     --text-main: #ffffff;
     --text-dim: #888;
     --node-border: #2a2a2a;
@@ -156,7 +155,6 @@ button {
     100% { transform: scale(1); background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
 }
 
-/* --- RESPONSIVE OVERRIDES --- */
 
 /* For Tablets and smaller laptops */
 @media (max-width: 1100px) {
@@ -250,7 +248,7 @@ button {
     }
 
     .nav-links {
-        display: none; /* Hide links on very small screens to save space */
+        display: none;
     }
     
     .logo {
