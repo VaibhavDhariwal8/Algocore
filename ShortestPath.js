@@ -110,18 +110,17 @@ function toggleWeight(row, col, grid) {
     const node = grid[row][col];
     if (node.isStart || node.isFinish || node.isWall) return;
 
-    node.weight = currentWeightValue;
-    
-    const element = document.getElementById(`node-${row}-${col}`);
-    
-    if (node.weight === 1) {
-        element.classList.remove("node-weight");
-        element.style.opacity = "1"; // Reset opacity
+    // Toggle logic: if it's already a weight, remove it, else add it
+    if (node.weight > 1) {
+        node.weight = 1;
+        document.getElementById(`node-${row}-${col}`).classList.remove("node-weight");
+        document.getElementById(`node-${row}-${col}`).style.opacity = "1";
     } else {
+        node.weight = currentWeightValue;
+        const element = document.getElementById(`node-${row}-${col}`);
         element.classList.add("node-weight");
-        
-        
-        const intensity = Math.min(0.3 + (node.weight / 50), 1); 
+        // Opacity logic for "intensity"
+        const intensity = 0.4 + (node.weight / 100); 
         element.style.opacity = intensity;
     }
 }
@@ -129,6 +128,20 @@ function toggleWeight(row, col, grid) {
 function updateWeightValue(val) {
     currentWeightValue = parseInt(val);
     document.getElementById('weightDisplay').innerText = val; // Update the text label
+}
+
+function setTool(tool) {
+    currentTool = tool;
+    
+    // Update button visuals
+    document.getElementById('wall-btn').classList.remove('active');
+    document.getElementById('weight-btn').classList.remove('active');
+    
+    if(tool === 'wall') {
+        document.getElementById('wall-btn').classList.add('active');
+    } else {
+        document.getElementById('weight-btn').classList.add('active');
+    }
 }
 
 function renderGrid(grid){

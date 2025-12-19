@@ -24,34 +24,39 @@
             <p>FINDING THE ESSENCE OF THE SHORTEST PATH.</p>
         </div>
 
+        
         <div class="app-container">
             <div class="controls">
-                <h3>CONTROLS</h3>
-                <button class="btn-primary" onclick="startVisualizer()">INITIALIZE SEARCH</button>
-                <button class="btn-secondary" onclick="window.location.reload()">RESET GRID</button>
-                <div class="toolbar">
-                    <button class="btn-primary" onclick="currentTool = 'wall'">WALL TOOL</button>
-                    <button class="btn-primary" onclick="currentTool = 'weight'">WEIGHT TOOL</button>
-                    
-                    <div style="margin-top: 10px; display: flex; flex-direction: column;">
-                        <label for="weightSlider" style="font-size: 10px; color: #888; margin-bottom: 5px;">
-                            WEIGHT VALUE: <span id="weightDisplay">5</span>
-                        </label>
-                        <input type="range" id="weightSlider" min="1" max="50" value="5" step="1" 
-                            oninput="updateWeightValue(this.value)">
+                <h3>ENGINE CONTROLS</h3>
+                
+                <button class="btn-run" onclick="startVisualizer()">INITIALIZE SEARCH</button>
+                <button onclick="window.location.reload()">RESET ALL</button>
+
+                <div class="slider-container">
+                    <label style="font-size: 9px; color: var(--text-dim);">TOOL SELECTION</label>
+                    <div class="button-group" style="margin-top: 10px;">
+                        <button id="wall-btn" class="active" onclick="setTool('wall')">WALL TOOL</button>
+                        <button id="weight-btn" onclick="setTool('weight')">WEIGHT TOOL (MUD)</button>
                     </div>
+                    
+                    <label style="font-size: 9px; color: var(--text-dim); margin-top: 15px; display: block;">
+                        MUD INTENSITY: <span id="weightDisplay" style="color: var(--text-main);">5</span>
+                    </label>
+                    <input type="range" id="weightSlider" min="1" max="50" value="5" step="1" 
+                        oninput="updateWeightValue(this.value)">
                 </div>
+
                 <div class="legend">
-                    <div class="legend-item"><div class="box start"></div> Start</div>
-                    <div class="legend-item"><div class="box finish"></div> Finish</div>
-                    <div class="legend-item"><div class="box wall"></div> Wall</div>
-                    <div class="legend-item"><div class="box node-weight"></div> Mud (Weight: 5)</div>
+                    <div class="legend-item"><div class="box" style="background: var(--accent-color)"></div> START</div>
+                    <div class="legend-item"><div class="box" style="background: var(--finish-color)"></div> FINISH</div>
+                    <div class="legend-item"><div class="box" style="background: #333"></div> WALL</div>
+                    <div class="legend-item"><div class="box" style="background: var(--weight-color)"></div> MUD</div>
                 </div>
             </div>
+
             <div id="grid-container">
                 <!-- Grid injected by JS -->
             </div>
-            
         </div>
     </main>
 
