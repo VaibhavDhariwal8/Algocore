@@ -134,7 +134,10 @@ button {
     border: none;
     transform: scale(0.95);
 }
-
+.node-weight {
+    background-color: #8B4513; /* Brown for mud */
+    border: 1px solid rgb(175, 122, 122);
+}
 /* Animations for Dijkstra */
 .node-visited {
     animation: visitedAnimation 1.5s ease-out forwards;

@@ -2,6 +2,7 @@ let isDraggingStart = false;
 let isDraggingFinish = false;
 let isDraggingWall = false;
 
+let currentTool = 'wall'
 
 class Node {
     constructor(row, col, isWall, isStart, isFinish, isVisited) {
@@ -13,6 +14,7 @@ class Node {
         this.isVisited = isVisited;
         this.distance = Infinity;
         this.previousNode = null;
+        this.weight = 1;
     }
 }
 
@@ -33,13 +35,18 @@ function toggleWall(row, col, grid){
     element.classList.toggle("node-wall");
 }
 
-function handleMouseDown(row, col, grid){
+function handleMouseDown(row, col, grid) {
     const node = grid[row][col];
-    if(node.isStart) isDraggingStart = true;
-    else if(node.isFinish) isDraggingFinish = true;
+    if (node.isStart) isDraggingStart = true;
+    else if (node.isFinish) isDraggingFinish = true;
     else {
-        isDraggingWall = true;
-        toggleWall(row,col,grid);
+        if (currentTool === 'wall') {
+            isDraggingWall = true;
+            toggleWall(row, col, grid);
+        } else {
+            isDraggingWeight = true;
+            toggleWeight(row, col, grid);
+        }
     }
 }
 
@@ -93,6 +100,15 @@ function resetGridData(grid){
     }
 }
 
+function toggleWeight(row, col, grid) {
+    const node = grid[row][col];
+    if (node.isStart || node.isFinish || node.isWall) return;
+
+    node.weight = node.weight === 1 ? 5 : 1;
+    const element = document.getElementById(`node-${row}-${col}`);
+    element.classList.toggle("node-weight");
+}
+
 function renderGrid(grid){
 
     const container = document.getElementById("grid-container")
@@ -128,13 +144,18 @@ function getNeighbours(node, grid){
     return neighbours;
 }
 
-function updateUnvisitedNeighbours(closestNode, grid){
+function updateUnvisitedNeighbours(closestNode, grid) {
     const neighbours = getNeighbours(closestNode, grid);
 
-    for(let i=0; i<neighbours.length; i++){
-        if(!neighbours[i].isVisited){
-            neighbours[i].distance = closestNode.distance + 1;
-            neighbours[i].previousNode = closestNode;
+    for (let i = 0; i < neighbours.length; i++) {
+        const neighbour = neighbours[i];
+        if (!neighbour.isVisited) {
+            const newDistance = closestNode.distance + neighbour.weight;
+            
+            if (newDistance < neighbour.distance) {
+                neighbour.distance = newDistance;
+                neighbour.previousNode = closestNode;
+            }
         }
     }
 }

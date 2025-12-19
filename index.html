@@ -29,10 +29,15 @@
                 <h3>CONTROLS</h3>
                 <button class="btn-primary" onclick="startVisualizer()">INITIALIZE SEARCH</button>
                 <button class="btn-secondary" onclick="window.location.reload()">RESET GRID</button>
+                <div class="toolbar">
+                    <button class="btn-primary" onclick="currentTool = 'wall'">WALL TOOL</button>
+                    <button class="btn-primary" onclick="currentTool = 'weight'">MUD TOOL (Weight: 5)</button>
+                </div>
                 <div class="legend">
                     <div class="legend-item"><div class="box start"></div> Start</div>
                     <div class="legend-item"><div class="box finish"></div> Finish</div>
                     <div class="legend-item"><div class="box wall"></div> Wall</div>
+                    <div class="legend-item"><div class="box node-weight"></div> Mud (Weight: 5)</div>
                 </div>
             </div>
             <div id="grid-container">
