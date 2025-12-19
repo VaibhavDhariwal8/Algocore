@@ -1,0 +1,48 @@
+<!-- Replace your index.html content with this -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pathfinder // Dijkstra Essence</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo">ALGO.CORE</div>
+        <div class="nav-links">
+            <span>ABOUT</span>
+            <span>SOURCE</span>
+            <span class="contact">CONTACT</span>
+        </div>
+    </nav>
+
+    <main class="hero">
+        <div class="hero-text">
+            <h1>DIJKSTRA <span class="outline">VISUALIZER</span></h1>
+            <p>FINDING THE ESSENCE OF THE SHORTEST PATH.</p>
+        </div>
+
+        <div class="app-container">
+            <div class="controls">
+                <h3>CONTROLS</h3>
+                <button class="btn-primary" onclick="startVisualizer()">INITIALIZE SEARCH</button>
+                <button class="btn-secondary" onclick="window.location.reload()">RESET GRID</button>
+                <div class="legend">
+                    <div class="legend-item"><div class="box start"></div> Start</div>
+                    <div class="legend-item"><div class="box finish"></div> Finish</div>
+                    <div class="legend-item"><div class="box wall"></div> Wall</div>
+                </div>
+            </div>
+            <div id="grid-container">
+                <!-- Grid injected by JS -->
+            </div>
+            
+        </div>
+    </main>
+
+    <script src="ShortestPath.js"></script>
+</body>
+</html>

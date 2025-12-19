@@ -1,0 +1,260 @@
+/* Replace your styles.css with this */
+:root {
+    --bg-color: #0f0f0f;
+    --surface-color: #1a1a1a;
+    --accent-color: #8fa18d; /* Sage green from inspiration */
+    --text-main: #ffffff;
+    --text-dim: #888;
+    --node-border: #2a2a2a;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    background-color: var(--bg-color);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    overflow-x: hidden;
+}
+
+/* Navbar */
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    padding: 40px 60px;
+    letter-spacing: 3px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+.logo { font-size: 18px; }
+.nav-links span { margin-left: 30px; cursor: pointer; color: var(--text-dim); transition: 0.3s; }
+.nav-links span:hover { color: var(--text-main); }
+
+/* Hero Section */
+.hero {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 20px;
+}
+
+.hero-text {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.hero-text h1 {
+    font-size: 70px;
+    letter-spacing: 15px;
+    margin: 0;
+}
+
+.outline {
+    color: transparent;
+    -webkit-text-stroke: 1px var(--text-main);
+}
+
+.hero-text p {
+    letter-spacing: 5px;
+    color: var(--text-dim);
+    font-size: 12px;
+    margin-top: 10px;
+}
+
+/* App Container */
+.app-container {
+    display: flex;
+    gap: 40px;
+    background: var(--surface-color);
+    padding: 30px;
+    border-radius: 4px;
+    border: 1px solid #222;
+    box-shadow: 0 50px 100px rgba(0,0,0,0.5);
+}
+
+/* Controls */
+.controls {
+    display: flex;
+    flex-direction: column;
+    width: 200px;
+    border-right: 1px solid #333;
+    padding-right: 30px;
+}
+
+.controls h3 {
+    font-size: 12px;
+    letter-spacing: 2px;
+    margin-bottom: 20px;
+}
+
+button {
+    background: none;
+    border: 1px solid var(--text-dim);
+    color: white;
+    padding: 12px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    font-size: 10px;
+    letter-spacing: 1px;
+    transition: 0.3s;
+}
+
+.btn-primary:hover {
+    background: var(--text-main);
+    color: black;
+}
+
+.legend { margin-top: 20px; }
+.legend-item { display: flex; align-items: center; font-size: 11px; margin-bottom: 8px; color: var(--text-dim); }
+.box { width: 12px; height: 12px; margin-right: 10px; border-radius: 2px; }
+.box.start { background: #4caf50; }
+.box.finish { background: #f44336; }
+.box.wall { background: #555; }
+
+/* Grid Styling */
+#grid-container {
+    display: grid;
+    grid-template-columns: repeat(20, 28px); 
+    grid-template-rows: repeat(20, 28px);
+    gap: 2px;
+}
+
+.node {
+    width: 28px;
+    height: 28px;
+    background-color: #121212;
+    border: 1px solid var(--node-border);
+    transition: background-color 0.2s ease;
+}
+
+.node-start { background-color: var(--accent-color) !important; box-shadow: 0 0 15px var(--accent-color); }
+.node-finish { background-color: #e67e22 !important; }
+.node-wall { 
+    background-color: #333 !important; 
+    border: none;
+    transform: scale(0.95);
+}
+
+/* Animations for Dijkstra */
+.node-visited {
+    animation: visitedAnimation 1.5s ease-out forwards;
+}
+
+.node-shortest-path {
+    animation: shortestPath 0.5s ease-out forwards;
+}
+
+@keyframes visitedAnimation {
+    0% { transform: scale(0.3); background-color: rgba(143, 161, 141, 0.7); border-radius: 100%; }
+    50% { background-color: rgba(60, 70, 60, 0.7); }
+    100% { transform: scale(1); background-color: #222a22; }
+}
+
+@keyframes shortestPath {
+    0% { transform: scale(0.6); background-color: #fff; }
+    100% { transform: scale(1); background-color: var(--accent-color); box-shadow: 0 0 10px var(--accent-color); }
+}
+
+/* --- RESPONSIVE OVERRIDES --- */
+
+/* For Tablets and smaller laptops */
+@media (max-width: 1100px) {
+    .hero-text h1 {
+        font-size: 50px;
+        letter-spacing: 8px;
+    }
+
+    #grid-container {
+        /* Shrink nodes slightly to fit screen */
+        grid-template-columns: repeat(20, 22px);
+        grid-template-rows: repeat(20, 22px);
+    }
+
+    .node {
+        width: 22px;
+        height: 22px;
+    }
+}
+
+/* For Mobile Devices */
+@media (max-width: 768px) {
+    .navbar {
+        padding: 20px;
+    }
+
+    .hero-text h1 {
+        font-size: 32px;
+        letter-spacing: 5px;
+    }
+
+    .hero-text p {
+        font-size: 10px;
+        letter-spacing: 2px;
+    }
+
+    .app-container {
+        flex-direction: column; /* Stack controls on top of grid */
+        padding: 15px;
+        gap: 20px;
+        align-items: center;
+        width: 90%;
+    }
+
+    .controls {
+        width: 100%;
+        border-right: none;
+        border-bottom: 1px solid #333;
+        padding-right: 0;
+        padding-bottom: 20px;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .controls h3 {
+        width: 100%;
+        text-align: center;
+    }
+
+    .legend {
+        display: flex;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    /* Scale grid to fit mobile screens */
+    #grid-container {
+        grid-template-columns: repeat(20, 4.2vw);
+        grid-template-rows: repeat(20, 4.2vw);
+        gap: 1px;
+    }
+
+    .node {
+        width: 4.2vw;
+        height: 4.2vw;
+    }
+
+    .nav-links span {
+        margin-left: 15px;
+        font-size: 10px;
+    }
+}
+
+/* For Small Phones */
+@media (max-width: 480px) {
+    .hero-text h1 {
+        font-size: 24px;
+        letter-spacing: 3px;
+    }
+
+    .nav-links {
+        display: none; /* Hide links on very small screens to save space */
+    }
+    
+    .logo {
+        width: 100%;
+        text-align: center;
+    }
+}
