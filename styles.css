@@ -145,6 +145,29 @@ input[type=range]::-webkit-slider-thumb {
 .node-visited { animation: visitedAnimation 1.2s ease-out forwards; }
 .node-shortest-path { animation: shortestPath 0.5s ease-out forwards; }
 
+
+.nav-links span.active {
+    color: var(--text-main);
+    border-bottom: 1px solid var(--accent-color);
+    padding-bottom: 5px;
+}
+
+.label-small {
+    font-size: 9px; 
+    color: var(--text-dim); 
+    display: block; 
+    margin-top: 15px;
+    letter-spacing: 1px;
+}
+
+/* Ensures the Graph page container handles overflow like the Grid page */
+.grid-wrapper {
+    overflow-x: auto;
+    flex-grow: 1;
+    display: flex;
+    justify-content: center;
+}
+
 @keyframes visitedAnimation {
     0% { transform: scale(0.3); background-color: rgba(143, 161, 141, 0.3); border-radius: 50%; }
     100% { transform: scale(1); background-color: #1e221e; border: 1px solid #2a302a; }
