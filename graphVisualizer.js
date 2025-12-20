@@ -125,46 +125,61 @@ function renderGraph() {
         div.className = 'graph-node';
         div.style.left = `${node.x}px`;
         div.style.top = `${node.y}px`;
-        div.innerText = node.id;
+        div.innerHTML = `
+            <span style="font-size:14px; display:block; line-height:1;">${node.id}</span>
+            <span id="dist-${node.id}" style="font-size:10px; display:block; line-height:1; margin-top:2px;">∞</span>
+        `;
         div.id = `node-${node.id}`;
         container.appendChild(div);
     });
 }
 
-function dijkstra(startId, endId){
+function dijkstra(startId, endId) {
     let distance = [];
     let previous = [];
     let isVisited = [];
+    
+    //We will store "snapshots" of what happened
+    let animationLog = []; 
 
-    for(let i=0; i<10; i++){
+    for (let i = 0; i < 10; i++) {
         distance.push(Infinity);
         previous.push(null);
         isVisited.push(false);
     }
     distance[startId] = 0;
+    
+    // Log initial 0 distance for start node
+    animationLog.push({ type: 'update', node: startId, newDist: 0 });
 
-    while(true) {
+    while (true) {
         let minDistance = Infinity;
         let closestNode = null;
 
-        // TASK: Write a FOR loop here (0 to 9).
-        for(let i=0; i<10; i++){
-            if(!isVisited[i] && distance[i] < minDistance){
+        for (let i = 0; i < 10; i++) {
+            if (!isVisited[i] && distance[i] < minDistance) {
                 minDistance = distance[i];
                 closestNode = i;
             }
         }
 
-        if(closestNode === null) break;
-        if(closestNode === endId) break;
+        if (closestNode === null) break;
+        
+        // Log that we are visiting this node now
+        animationLog.push({ type: 'visit', node: closestNode });
+
+        if (closestNode === endId) break;
         isVisited[closestNode] = true;
 
         edges.forEach(edge => {
-            if(edge.from === closestNode){
+            if (edge.from === closestNode) {
                 let newDist = distance[closestNode] + edge.weight;
-                if(newDist < distance[edge.to]){
+                if (newDist < distance[edge.to]) {
                     distance[edge.to] = newDist;
                     previous[edge.to] = closestNode;
+                    
+                    // Log that we found a better distance!
+                    animationLog.push({ type: 'update', node: edge.to, newDist: newDist });
                 }
             }
         })
@@ -172,30 +187,70 @@ function dijkstra(startId, endId){
 
     let path = [];
     let currentNode = endId;
-    while(currentNode !== null){
+    while (currentNode !== null) {
         path.push(currentNode);
         currentNode = previous[currentNode];
     }
-    return path.reverse();
-
+    
+    // Return the log AND the path
+    return { 
+        path: path.reverse(), 
+        animationLog: animationLog 
+    };
 }
 
-function animatePath(path) {
-    // Loop through the path array
-    for (let i = 0; i < path.length; i++) {
-        
+function animateAlgorithm(animationLog, finalPath) {
+    //ANIMATE THE SEARCH (Visits & Updates)
+    for (let i = 0; i < animationLog.length; i++) {
         setTimeout(() => {
-            const nodeId = path[i];
+            const event = animationLog[i];
             
-            const node = document.getElementById(`node-${nodeId}`)
-            node.classList.add("active");
-            
-            if(i < path.length - 1){
-                let nextNodeId = path[i+1];
-                document.getElementById(`edge-${nodeId}-${nextNodeId}`).classList.add("active");
+            if (event.type === 'visit') {
+                const node = document.getElementById(`node-${event.node}`);
+                node.classList.add("visited");
+            } 
+            else if (event.type === 'update') {
+                const node = document.getElementById(`node-${event.node}`);
+                // Update the text to show the new distance
+                node.innerHTML = `
+                    <span style="font-size:14px; display:block; line-height:1;">${event.node}</span>
+                    <span style="font-size:10px; display:block; line-height:1; margin-top:2px;">${event.newDist}</span>
+                `;
+                node.style.backgroundColor = "#fff"; // Flash white
+                setTimeout(() => {
+                    node.style.backgroundColor = ""; // Revert to Orange (or Blue if already visited)
+                }, 300);
             }
-        }, 500 * i);
+            
+        }, 500 * i); // 500ms per step
     }
+
+    //CLEANUP & SHOW FINAL PATH
+    // Calculate when the search animation ends
+    const totalSearchTime = animationLog.length * 500;
+
+    setTimeout(() => {
+        // A. RESET ALL NODES (Turn back to original color)
+        document.querySelectorAll('.visited').forEach(el => el.classList.remove('visited'));
+        
+        // B. ANIMATE THE FINAL YELLOW PATH
+        for (let j = 0; j < finalPath.length; j++) {
+            setTimeout(() => {
+                const nodeId = finalPath[j];
+                const node = document.getElementById(`node-${nodeId}`);
+                
+                node.classList.add("active"); // Turn Yellow
+                
+                // Color the edge if there is a next node
+                if(j < finalPath.length - 1) {
+                    const nextNodeId = finalPath[j+1];
+                    const edge = document.getElementById(`edge-${nodeId}-${nextNodeId}`);
+                    if(edge) edge.classList.add("active");
+                }
+            }, 300 * j);
+        }
+
+    }, totalSearchTime + 500); // Wait for search to finish, then pause 500ms
 }
 
 function toggleMudMode() {
@@ -215,15 +270,20 @@ function toggleMudMode() {
 renderGraph();
 
 function runDijkstra() {
+    // Clear old classes
     document.querySelectorAll('.active').forEach(el => el.classList.remove('active'));
-
-    //Run Algorithm
-    const path = dijkstra(0, 9); // Start at 0, End at 9
-    console.log("Calculated Path:", path);
+    document.querySelectorAll('.visited').forEach(el => el.classList.remove('visited'));
     
-    //Trigger Animation
-    if (path.length > 0) {
-        animatePath(path);
+    // Reset text to "Infinity" (optional, for cleanliness)
+    nodes.forEach(n => {
+        const el = document.getElementById(`node-${n.id}`);
+        if(el) el.innerHTML = `${n.id}<br><span style="font-size:10px">∞</span>`;
+    });
+
+    const result = dijkstra(0, 9); 
+    
+    if (result.path.length > 0) {
+        animateAlgorithm(result.animationLog, result.path);
     } else {
         alert("No path found!");
     }
