@@ -80,6 +80,10 @@ button {
   padding: 40px;
   border: 1px solid #252525;
   box-shadow: 0 40px 80px rgba(0, 0, 0, 0.6);
+  align-items: flex-start; /* Prevents vertical stretching */
+  width: 90%;
+  max-width: 1200px;
+  box-sizing: border-box;
 }
 
 /* Controls & Buttons */
@@ -170,8 +174,9 @@ input[type="range"]::-webkit-slider-thumb {
   grid-template-columns: repeat(20, 1fr);
   grid-template-rows: repeat(20, 1fr);
   gap: 2px;
-  width: 100%;
-  max-width: 640px; /* Approx 20 * 30px + gaps */
+  flex: 1; /* Take remaining width */
+  width: 100%; /* Ensure it fills the width */
+  min-width: 300px; /* Prevent collapse */
   aspect-ratio: 1 / 1;
 }
 
@@ -242,10 +247,12 @@ input[type="range"]::-webkit-slider-thumb {
 
 /* Ensures the Graph page container handles overflow like the Grid page */
 .grid-wrapper {
-  overflow-x: auto;
+  overflow: hidden; /* Hide scrollbars */
   flex-grow: 1;
   display: flex;
   justify-content: center;
+  align-items: center;
+  width: 100%;
 }
 
 @keyframes visitedAnimation {
@@ -341,17 +348,15 @@ input[type="range"]::-webkit-slider-thumb {
 
   /* Graph View Mobile Adjustments */
   #graph-container {
-    transform-origin: top center;
+    transform-origin: center center;
     transform: scale(0.7);
-    margin-bottom: -120px; /* Compensate for scale whitespace */
+    /* No margin-bottom needed if we center vertically in flex */
   }
 }
 
 @media (max-width: 600px) {
   #graph-container {
     transform: scale(0.45);
-    margin-bottom: -220px;
-    left: -20px; /* Slight adjust */
   }
 
   .hero-text h1 {
@@ -377,6 +382,7 @@ input[type="range"]::-webkit-slider-thumb {
   height: 400px;
   margin: 0 auto;
   transition: transform 0.3s ease;
+  flex-shrink: 0;
 }
 
 .graph-node {
